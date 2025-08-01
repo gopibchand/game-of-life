@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: gopi417/java11_maven1_arm64:latest
+      image: gopi417/java11_maven3_arm64:latest
       # options: --user root  # Use root user to avoid permission issues
     steps:
       - name: Checkout repository
