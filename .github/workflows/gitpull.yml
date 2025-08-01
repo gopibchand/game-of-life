@@ -12,6 +12,7 @@ jobs:
     container:
       image: gopi417/java11_maven
       # options: --user root  # Use root user to avoid permission issues
+      options: --entrypoint "" 
 
     steps:
       - name: Checkout repository
