@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17   # Java 7 isn’t available anymore
+          java-version: 7   # Java 7 isn’t available anymore
 
       - name: Build with Maven
         run: mvn -B clean install -DskipTests
