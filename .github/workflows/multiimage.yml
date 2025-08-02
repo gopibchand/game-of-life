@@ -37,6 +37,8 @@ jobs:
       image: gopi417/java11_maven3_arm64:latest
     needs: jdkinstall
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: list the date
         run: ls -lrt
       - name: Build with Maven
