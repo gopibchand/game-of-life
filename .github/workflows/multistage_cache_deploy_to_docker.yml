@@ -3,9 +3,9 @@ name: Multi-stage Cache Deploy to Docker
 on:
   workflow_dispatch:
   push:
-    branches: [ f-workflow ]
+    branches: [ main, f-workflow ]
   pull_request:
-    branches: [ f-workflow ]
+    branches: [ main ]
 
 jobs:
   codeclone:
