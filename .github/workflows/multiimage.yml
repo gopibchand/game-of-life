@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: gopi417/java11_maven3_arm64:latest
-      needs: codeclone
+    needs: codeclone
       # options: --user root  # Use root user to avoid permission issues
     steps:
       - name: Checkout repository
@@ -31,11 +31,11 @@ jobs:
           distribution: temurin
           java-version: 11
     
-    codebuild:
-      runs-on: ubuntu-latest
-      container:
-        image: gopi417/java11_maven3_arm64:latest
-        needs: jdkinstall
-      steps:
+  codebuild:
+    runs-on: ubuntu-latest
+    container:
+      image: gopi417/java11_maven3_arm64:latest
+    needs: jdkinstall
+    steps:
       - name: Build with Maven
         run: mvn -B clean install -DskipTests
