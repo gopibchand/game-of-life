@@ -8,14 +8,14 @@ on:
     branches: [ main ]
 env:
   mvn_image: gopi417/gameoflife:latest
-  base_image: ubuntu-latest
+  base_image: alpine:latest
   
 jobs:
   codeclone:
     name: Clone and Upload Source Code
-    runs-on: ${{ env.base_image }}
+    runs-on: ubuntu-latest
     container:
-      image: alpine:latest
+      image: ${ env.base_image }
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
 
   jdkinstall:
     name: Set up JDK 11 dummy stage
-    runs-on: ${{ env.base_image }}
+    runs-on: ubuntu-latest
     container:
       image: ${{ env.mvn_image }}
     needs: codeclone
@@ -41,7 +41,7 @@ jobs:
     
   codebuild:
     name: Build with Maven GOL
-    runs-on: ${{ env.base_image }}
+    runs-on: ubuntu-latest
     container:
       image: ${{ env.mvn_image }}
     needs: jdkinstall
@@ -62,7 +62,7 @@ jobs:
           path: ./gameoflife-web/target/
   deploytodocker:
     name: Deploy to Docker Hub
-    runs-on: ${{ env.base_image }}
+    runs-on: ubuntu-latest
     needs: codebuild
     steps:
       - name: Download war
