@@ -8,6 +8,7 @@ on:
 
 jobs:
   codeclone:
+    name: Clone and Upload Source Code
     runs-on: ubuntu-latest
     container:
       image: alpine:latest
@@ -21,6 +22,7 @@ jobs:
           path: ./
 
   jdkinstall:
+    name: Set up JDK 11 dummy stage
     runs-on: ubuntu-latest
     container:
       image: gopi417/java11_maven3_arm64:latest
@@ -34,6 +36,7 @@ jobs:
           java-version: 11
     
   codebuild:
+    name: Build with Maven GOL
     runs-on: ubuntu-latest
     container:
       image: gopi417/java11_maven3_arm64:latest
@@ -54,6 +57,7 @@ jobs:
           name: build_artifacts
           path: ./gameoflife-web/target/
   deploytodocker:
+    name: Deploy to Docker Hub
     runs-on: ubuntu-latest
     needs: codebuild
     steps:
