@@ -1,13 +1,15 @@
-FROM ubuntu:latest
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -y
-RUN apt-get install -y wget gnupg software-properties-common
+# Use official Tomcat base image with JDK 11
+FROM tomcat:9.0-jdk11
 
-# Add older Ubuntu repo (Jammy has Java 11)
-RUN add-apt-repository ppa:openjdk-r/ppa -y
+# Remove default ROOT webapp (optional, avoids conflicts)
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Install Java 11
-RUN apt-get update -y
-RUN apt-get install -y openjdk-11-jdk
-RUN apt-get install -y maven
-CMD ["tail", "-f", "/dev/null"]
+# Copy your WAR file into Tomcat’s webapps directory
+# (WAR will auto-deploy when Tomcat starts)
+COPY gameoflife-web/target/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
+
+# Expose Tomcat port
+EXPOSE 8080
+
+# Start Tomcat (default CMD already starts catalina.sh run)
+CMD ["catalina.sh", "run"]
