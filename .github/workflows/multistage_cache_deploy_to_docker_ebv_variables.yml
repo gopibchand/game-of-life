@@ -15,7 +15,7 @@ jobs:
     name: Clone and Upload Source Code
     runs-on: ubuntu-latest
     container:
-      image: ${ env.base_image }
+      image: ${{ env.base_image }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
