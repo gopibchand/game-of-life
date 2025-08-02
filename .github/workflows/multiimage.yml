@@ -38,6 +38,6 @@ jobs:
     needs: jdkinstall
     steps:
       - name: list the date
-        uses: ls -lrt
+        run: ls -lrt
       - name: Build with Maven
         run: mvn -B clean install -DskipTests
