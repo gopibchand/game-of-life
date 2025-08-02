@@ -13,7 +13,7 @@ env:
 jobs:
   codeclone:
     name: Clone and Upload Source Code
-    runs-on: {{ env.base_image }}
+    runs-on: ${{ env.base_image }}
     container:
       image: alpine:latest
     steps:
