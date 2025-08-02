@@ -6,16 +6,16 @@ on:
     branches: [ main, f-workflow ]
   pull_request:
     branches: [ main ]
-env:
-  mvn_image: gopi417/gameoflife:latest
-  base_image: alpine:latest
+# env:
+#   mvn_image: gopi417/gameoflife:latest
+#   base_image: alpine:latest
   
 jobs:
   codeclone:
     name: Clone and Upload Source Code
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.base_image }}
+      image: ${{ vars.BASE_IMAGE }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
     name: Set up JDK 11 dummy stage
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.mvn_image }}
+      image: ${{ vars.MVN_IMAGE }}
     needs: codeclone
       # options: --user root  # Use root user to avoid permission issues
     steps:
@@ -43,7 +43,7 @@ jobs:
     name: Build with Maven GOL
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.mvn_image }}
+      image: ${{ vars.MVN_IMAGE }}
     needs: jdkinstall
     steps:
       - name: Download sourcecode
