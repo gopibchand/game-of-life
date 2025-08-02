@@ -1,0 +1,94 @@
+name: Multi-stage Cache Deploy to Docker env variable
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, f-workflow ]
+  pull_request:
+    branches: [ main ]
+env:
+  mvn_image: gopi417/gameoflife:latest
+  base_image: ubuntu:latest
+  
+jobs:
+  codeclone:
+    name: Clone and Upload Source Code
+    runs-on: {{ env.base_image }}
+    container:
+      image: alpine:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: upload source
+        uses: actions/upload-artifact@v4
+        with:
+          name: sourcecode_gol
+          path: ./
+
+  jdkinstall:
+    name: Set up JDK 11 dummy stage
+    runs-on: ${{ env.base_image }}
+    container:
+      image: ${{ env.mvn_image }}
+    needs: codeclone
+      # options: --user root  # Use root user to avoid permission issues
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+    
+  codebuild:
+    name: Build with Maven GOL
+    runs-on: ${{ env.base_image }}
+    container:
+      image: ${{ env.mvn_image }}
+    needs: jdkinstall
+    steps:
+      - name: Download sourcecode
+        uses: actions/download-artifact@v4
+        with:
+          name: sourcecode_gol
+          path: ./
+      - name: list the date
+        run: ls -lrt
+      - name: Build with Maven
+        run: mvn -B clean install -DskipTests
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_artifacts
+          path: ./gameoflife-web/target/
+  deploytodocker:
+    name: Deploy to Docker Hub
+    runs-on: ${{ env.base_image }}
+    needs: codebuild
+    steps:
+      - name: Download war
+        uses: actions/download-artifact@v4
+        with:
+          name: build_artifacts
+          path: ./gameoflife-web/target/
+      - name: Download sourcecode
+        uses: actions/download-artifact@v4
+        with:
+          name: sourcecode_gol
+          path: ./
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            gopi417/gameoflife:latest
+            gopi417/gameoflife:${{ github.sha }}
+            gopi417/gameoflife:${{ github.event_name }}-${{ github.run_number }}
+            gopi417/gameoflife:${{ github.run_number }}
+            gopi417/gameoflife:${{ github.run_id }}
