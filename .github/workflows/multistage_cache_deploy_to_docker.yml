@@ -1,6 +1,7 @@
 name: Multi-stage Cache Deploy to Docker
 
 on:
+  workflow_dispatch:
   push:
     branches: [ f-workflow ]
   pull_request:
@@ -83,7 +84,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            gopi417/gameoflife:latest
+#gopi417/gameoflife:latest
             gopi417/gameoflife:${{ github.sha }}
             gopi417/gameoflife:${{ github.event_name }}-${{ github.run_number }}
             gopi417/gameoflife:${{ github.run_number }}
