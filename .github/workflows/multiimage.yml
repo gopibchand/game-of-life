@@ -37,5 +37,7 @@ jobs:
       image: gopi417/java11_maven3_arm64:latest
     needs: jdkinstall
     steps:
+      - name: list the date
+        uses: ls -lrt
       - name: Build with Maven
         run: mvn -B clean install -DskipTests
