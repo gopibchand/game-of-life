@@ -1,0 +1,45 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ f-workflow ]
+  pull_request:
+    branches: [ f-workflow ]
+
+jobs:
+  codeclone:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+  jdkinstall:
+    runs-on: ubuntu-latest
+    container:
+      image: gopi417/java11_maven3_arm64:latest
+    needs: codeclone
+      # options: --user root  # Use root user to avoid permission issues
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+    
+  codebuild:
+    runs-on: ubuntu-latest
+    container:
+      image: gopi417/java11_maven3_arm64:latest
+    needs: jdkinstall
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: list the date
+        run: ls -lrt
+      - name: Build with Maven
+        run: mvn -B clean install -DskipTests
