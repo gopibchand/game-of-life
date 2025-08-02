@@ -15,7 +15,7 @@ jobs:
     name: Clone and Upload Source Code
     runs-on: ubuntu-latest
     container:
-      image: env.base_image
+      image: ${{ env.base_image }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
     name: Set up JDK 11 dummy stage
     runs-on: ubuntu-latest
     container:
-      image: env.mvn_image
+      image: ${{ env.mvn_image }}
     needs: codeclone
       # options: --user root  # Use root user to avoid permission issues
     steps:
@@ -43,7 +43,7 @@ jobs:
     name: Build with Maven GOL
     runs-on: ubuntu-latest
     container:
-      image: env.mvn_image
+      image: ${{ env.mvn_image }}
     needs: jdkinstall
     steps:
       - name: Download sourcecode
