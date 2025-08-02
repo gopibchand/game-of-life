@@ -6,7 +6,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Copy your WAR file into Tomcat’s webapps directory
 # (WAR will auto-deploy when Tomcat starts)
-COPY gameoflife-web/target/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
+COPY ./gameoflife-web/target/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
 
 # Expose Tomcat port
 EXPOSE 8080
