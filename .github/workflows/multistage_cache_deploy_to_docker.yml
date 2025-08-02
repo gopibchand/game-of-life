@@ -1,4 +1,4 @@
-name: CI Build
+name: Multi-stage Cache Deploy to Docker
 
 on:
   push:
