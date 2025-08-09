@@ -1,4 +1,4 @@
-name: Multi stage
+name: Multi stage no cache
 
 on:
   push:
