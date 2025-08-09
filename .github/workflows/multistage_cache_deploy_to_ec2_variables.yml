@@ -1,4 +1,4 @@
-name: Multi-stage Cache Deploy to Docker env variable
+name: Multi-stage Cache Deploy to ec2-user tomcat10
 
 on:
   workflow_dispatch:
@@ -67,24 +67,15 @@ jobs:
         with:
           name: build_artifacts
           path: ./gameoflife-web/target/
-      - name: Download sourcecode
-        uses: actions/download-artifact@v4
-        with:
-          name: sourcecode_gol
-          path: ./
-      - name: docker login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            gopi417/gameoflife:${{ github.sha }}
-            gopi417/gameoflife:${{ github.event_name }}-${{ github.run_number }}
-            gopi417/gameoflife:${{ github.run_number }}
-            gopi417/gameoflife:${{ github.run_id }}
+      - name: SSH Setup
+        run: |
+          mkdir -p ~/.ssh
+          echo ${{ secrets.AWS_LOGIN }} > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AWS_HOST }} >> ~/.ssh/known_hosts
+      - name: Copy war to ec2
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./gameoflife-web/target/gameoflife-web.war ec2-user@${{ secrets.AWS_HOST }}:/home/ec2-user/tomcat10/webapps/
+      - name: Restart Tomcat
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.AWS_HOST }} "/home/ec2-user/tomcat10/bin/shutdown.sh && sleep 5 && /home/ec2-user/tomcat10/bin/startup.sh"
