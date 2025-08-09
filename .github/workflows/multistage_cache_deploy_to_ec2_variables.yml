@@ -70,7 +70,7 @@ jobs:
       - name: SSH Setup
         run: |
           mkdir -p ~/.ssh
-          echo ${{ secrets.AWS_LOGIN }} > ~/.ssh/id_rsa
+          echo "${{ secrets.AWS_LOGIN }}" | tr '\n' '\n' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ vars.AWS_HOST }} >> ~/.ssh/known_hosts
       - name: list files
