@@ -73,6 +73,8 @@ jobs:
           echo ${{ secrets.AWS_LOGIN }} > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ vars.AWS_HOST }} >> ~/.ssh/known_hosts
+      - name: list files
+        run: ls -lrt ./gameoflife-web/target/ && ls -lrt 
       - name: Copy war to ec2
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./gameoflife-web/target/gameoflife-web.war ec2-user@${{ secrets.AWS_HOST }}:/home/ec2-user/tomcat10/webapps/
