@@ -1,4 +1,4 @@
-name: CI Build
+name: Multi stage
 
 on:
   push:
