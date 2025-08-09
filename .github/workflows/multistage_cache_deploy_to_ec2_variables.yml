@@ -77,7 +77,7 @@ jobs:
         run: ls -lrt ./gameoflife-web/target/ && ls -lrt 
       - name: Copy war to ec2
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa gameoflife.war ec2-user@${{ secrets.AWS_HOST }}:/home/ec2-user/tomcat10/webapps/
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ./gameoflife-web/target/gameoflife.war ec2-user@${{ secrets.AWS_HOST }}:/home/ec2-user/tomcat10/webapps/
       - name: Restart Tomcat
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ec2-user@${{ secrets.AWS_HOST }} "/home/ec2-user/tomcat10/bin/shutdown.sh && sleep 5 && /home/ec2-user/tomcat10/bin/startup.sh"
