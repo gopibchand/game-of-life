@@ -58,7 +58,7 @@ jobs:
           name: build_artifacts
           path: ./gameoflife-web/target/
   deploytodocker:
-    name: Deploy to Docker Hub
+    name: Deploy to ec2-user
     runs-on: ${{ vars.UBUNTU }}
     needs: codebuild
     steps:
